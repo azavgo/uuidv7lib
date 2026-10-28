@@ -1,13 +1,13 @@
 # Library to generate UUID version 7 RFC strings
 ## Supported formats: 
 - Low letters case, e.g. 01a1821cadbe7a4cad2fd5f11dd95c64. Function signature: pub fn
-  to_low() -> Arc<String>
+  to_low() -> `Arc<String>`
 - Capital letters case, e.g. 01A1821CADBE7A4CAD2FD5F11DD95C64. Function
-  signature: pub fn to_capital() -> Arc<String>
+  signature: pub fn to_capital() -> `Arc<String>`
 - Low letters case with dashes, e.g. 01a1821c-adbe-7a4c-ad2f-d5f11dd95c64.
-  Function signature pub fn to_low_dashes() -> Arc<String>
+  Function signature pub fn to_low_dashes() -> `Arc<String>`
 - Capital letters with dashes, e.g. 01A1821C-ADBE-7A4C-AD2F-D5F11DD95C64.
-  Function signature pub fn to_capital_dashes() -> Arc<String>
+  Function signature pub fn to_capital_dashes() -> `Arc<String>`
   
 ## How to use this library:
 
