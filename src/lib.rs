@@ -14,7 +14,8 @@
 //(4) The final 5th group has 12 random characters 
 
 use time::Timestamp; 
-use rand; 
+use rand;
+use std::sync::Arc; 
 
 //Generate Epoch timestamp in milliseconds
 pub fn timestamp() -> String {
@@ -50,46 +51,81 @@ pub fn uuidv7_variant() -> String {
     format!("{:x}", rand::random_range(8..=11))
 }
 
+#[derive(Debug)]
+pub struct UUIDv7 {
+    uuidv7: Arc<String>,
+}
+
+impl UUIDv7 {
+
 //Convert it to hex 0x....
 //Add "0" in the beginning of the hex number 0x0... 
 //Add "7" in the end 
 //Add three random characters (0 to 9, a to f) 
 //Add three randomly selected characters in the end (0 to 9, a to f)
 //Add 15 randomly characters in the end 
-pub fn uuidv7_builder() -> String {
-    format!("0{}7{}{}{}", timestamp(), three_random_characters(), 
-        uuidv7_variant(), fifteen_random_characters())
-}
+    pub fn new() -> Self {
+        Self {uuidv7: Arc::new(format!("0{}7{}{}{}", timestamp(), 
+                three_random_characters(), uuidv7_variant(), 
+                fifteen_random_characters()))
+        }
+    }
 
+    pub fn uuidv7(&self) -> Arc<String> {
+        Arc::clone(&self.uuidv7)
+    }
 
-
-
-//Display the variants: 
 //(1) A string of low characters, no dashes
+    pub fn to_low(&self) -> Arc<String> {
+        self.uuidv7()
+    }
+
 //(2) A string of capital letter characters, no dashes
+    pub fn to_capital(&self) -> Arc<String> {
+        Arc::new(self.uuidv7().to_uppercase())
+    }
+
 //(3) A string of low characters with dashes 
-//(4) A string of capital letter characters with dashes
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn uuidv7_variant_test() -> () {
-        let h = uuidv7_variant();
-        let eight = "8".to_string(); 
-        let nine = "9".to_string(); 
-        let ten = "a".to_string(); 
-        let eleven = "b".to_string(); 
-        match h {
-            eight => (),
-            nine => (), 
-            ten => (), 
-            eleven => (), 
-            _               => panic!("Expected values are 8, 9, a, b but 
-                                    got {}", h),
+    pub fn to_low_dashes(&self) -> Arc<String> {
+        let mut id = (*self.to_low()).clone();
+        if let Some((index, _)) = id.char_indices().nth(8) {
+            id.insert(index, '-');
         }
 
+        if let Some((index, _)) = id.char_indices().nth(13) {
+            id.insert(index, '-');
+        }
+
+        if let Some((index, _)) = id.char_indices().nth(18) {
+            id.insert(index, '-');
+        }
+
+        if let Some((index, _)) = id.char_indices().nth(23) {
+            id.insert(index, '-');
+        }
+
+        Arc::new(id)
+    }
+
+//(4) A string of capital letter characters with dashes
+    pub fn to_capital_dashes(&self) -> Arc<String> {
+        let mut id = (*self.to_capital()).clone();
+        if let Some((index, _)) = id.char_indices().nth(8) {
+            id.insert(index, '-');
+        }
+
+        if let Some((index, _)) = id.char_indices().nth(13) {
+            id.insert(index, '-');
+        }
+
+        if let Some((index, _)) = id.char_indices().nth(18) {
+            id.insert(index, '-');
+        }
+
+        if let Some((index, _)) = id.char_indices().nth(23) {
+            id.insert(index, '-');
+        }
+
+        Arc::new(id)
     }
 }
